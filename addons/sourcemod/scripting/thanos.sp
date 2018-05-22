@@ -30,6 +30,7 @@
 bool g_bPluginOn = false;
 Handle g_hPluginOn;
 
+bool g_bCvars_Changed = false;
 int Cvar_UnbalanceLimit_def;
 int Cvar_AutoBalance_def;
 Handle Cvar_UnbalanceLimit;
@@ -39,6 +40,27 @@ bool g_bWaitingForPlayers = false;
 
 int g_iCountDownStart = 20;
 int g_iCountDown_def = 20;
+
+char[6][512] ModelFiles = {
+	"models/infinity_war/thanos/inf_thanos.mdl",
+	"models/infinity_war/thanos/inf_thanos.dx80.vtx",
+	"models/infinity_war/thanos/inf_thanos.dx90.vtx",
+	"models/infinity_war/thanos/inf_thanos.phy",
+	"models/infinity_war/thanos/inf_thanos.sw.vtx",
+	"models/infinity_war/thanos/inf_thanos.vvd"
+};
+
+char[6][512] MaterialFiles = {
+	"materials/models/krypto/pattern01.vtf",
+	"materials/models/krypto/sv_thanos01_s02_1.vmt",
+	"materials/models/krypto/sv_thanos01_s02_1.vtf",
+	"materials/models/krypto/sv_thanos01_s02_1_sp.vtf",
+	"materials/models/krypto/sv_thanos01_s02_1n.vtf",
+	"materials/models/krypto/sv_thanos01_s02_2.vmt",
+	"materials/models/krypto/sv_thanos01_s02_2.vtf",
+	"materials/models/krypto/sv_thanos01_s02_2_n.vtf",
+	"materials/models/krypto/sv_thanos01_s02_2_sp.vtf"
+}
 
 public Plugin myinfo =
 {
@@ -57,7 +79,7 @@ public void OnPluginStart()
 	}
 
 	CreateConVar("sm_thanos_ver", PLUGIN_VERSION, "Thanos gamemode version", FCVAR_REPLICATED | FCVAR_SPONLY | FCVAR_DONTRECORD | FCVAR_NOTIFY);
-	g_hPluginOn = CreateConVar("sm_thanos_enable", "1", "Enable/Disable Thanos gamemode", FCVAR_NOTIFY);
+	g_hPluginOn = CreateConVar("sm_thanos_enable", "1", "Enable/Disable Thanos gamemode", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	// Global events
 	HookEvent("teamplay_round_start", OnRoundStart);
@@ -79,6 +101,39 @@ public void OnPluginStart()
 		g_bPluginOn = true;
 	else
 		g_bPluginOn = false;
+}
+
+public void OnMapStart()
+{
+	if (!g_bPluginOn)
+		return;
+
+	int modelCount = sizeof(ModelFiles[]);
+	int materialCount = sizeof(MaterialFiles[]);
+
+	for(int i = 0; i < modelCount; i++)
+	{
+		char s[512] = ModelFiles[i];
+		if (FileExists(s, true))
+			AddFileToDownloadsTable(s);
+
+		PrecacheModel("models/infinity_war/thanos/inf_thanos.mdl");
+	}
+
+	for(int i = 0; i < materialCount; i++)
+	{
+		char s[512] = ModelFiles[i];
+		if (FileExists(s, true))
+			AddFileToDownloadsTable(s);
+	}
+}
+
+public void OnPluginEnd()
+{
+	if(g_bCvars_Changed)
+	{
+		ResetCvars();
+	}
 }
 
 public Action OnPlayerInventory(Handle event, const char[] name, bool dontBroadcast)
@@ -338,12 +393,16 @@ void SetupCvars()
 {
 	SetConVarInt(Cvar_UnbalanceLimit, 0);
 	SetConVarInt(Cvar_AutoBalance, 0);
+
+	g_bCvars_Changed = true;
 }
 
 void ResetCvars()
 {
 	SetConVarInt(Cvar_UnbalanceLimit, Cvar_UnbalanceLimit_def);
 	SetConVarInt(Cvar_AutoBalance, Cvar_AutoBalance_def);
+
+	g_bCvars_Changed = false;
 }
 
 public Action Dissolve(Handle timer, any client)
