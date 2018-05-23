@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/krypto/inf_thanos/sv_thanos01_s02_1"
+	"$bumpmap" "models/krypto/inf_thanos/sv_thanos01_s02_1n"
+
+}

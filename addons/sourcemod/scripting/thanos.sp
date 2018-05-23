@@ -41,25 +41,25 @@ bool g_bWaitingForPlayers = false;
 int g_iCountDownStart = 20;
 int g_iCountDown_def = 20;
 
-char ModelFiles[6][512] = {
-	"models/infinity_war/thanos/inf_thanos.mdl",
-	"models/infinity_war/thanos/inf_thanos.dx80.vtx",
-	"models/infinity_war/thanos/inf_thanos.dx90.vtx",
-	"models/infinity_war/thanos/inf_thanos.phy",
-	"models/infinity_war/thanos/inf_thanos.sw.vtx",
-	"models/infinity_war/thanos/inf_thanos.vvd"
+char ModelFiles[][512] = {
+	"models/kryptonite/inf_thanos/inf_thanos.mdl",
+	"models/kryptonite/inf_thanos/inf_thanos.dx80.vtx",
+	"models/kryptonite/inf_thanos/inf_thanos.dx90.vtx",
+	"models/kryptonite/inf_thanos/inf_thanos.phy",
+	"models/kryptonite/inf_thanos/inf_thanos.sw.vtx",
+	"models/kryptonite/inf_thanos/inf_thanos.vvd"
 };
 
-char MaterialFiles[9][512] = {
-	"materials/models/krypto/pattern01.vtf",
-	"materials/models/krypto/sv_thanos01_s02_1.vmt",
-	"materials/models/krypto/sv_thanos01_s02_1.vtf",
-	"materials/models/krypto/sv_thanos01_s02_1_sp.vtf",
-	"materials/models/krypto/sv_thanos01_s02_1n.vtf",
-	"materials/models/krypto/sv_thanos01_s02_2.vmt",
-	"materials/models/krypto/sv_thanos01_s02_2.vtf",
-	"materials/models/krypto/sv_thanos01_s02_2_n.vtf",
-	"materials/models/krypto/sv_thanos01_s02_2_sp.vtf"
+char MaterialFiles[][512] = {
+	"materials/krypto/inf_thanos/pattern01.vtf",
+	"materials/krypto/inf_thanos/sv_thanos01_s02_1.vmt",
+	"materials/krypto/inf_thanos/sv_thanos01_s02_1.vtf",
+	"materials/krypto/inf_thanos/sv_thanos01_s02_1_sp.vtf",
+	"materials/krypto/inf_thanos/sv_thanos01_s02_1n.vtf",
+	"materials/krypto/inf_thanos/sv_thanos01_s02_2.vmt",
+	"materials/krypto/inf_thanos/sv_thanos01_s02_2.vtf",
+	"materials/krypto/inf_thanos/sv_thanos01_s02_2_n.vtf",
+	"materials/krypto/inf_thanos/sv_thanos01_s02_2_sp.vtf"
 };
 
 public Plugin myinfo =
@@ -108,8 +108,10 @@ public void OnMapStart()
 	if (!g_bPluginOn)
 		return;
 
-	int modelCount = sizeof(ModelFiles[]);
-	int materialCount = sizeof(MaterialFiles[]);
+	int modelCount = (sizeof(ModelFiles) -1);
+	PrintToServer("ModelCount %i", modelCount);
+	int materialCount = (sizeof(MaterialFiles) -1);
+	PrintToServer("MaterialCount %i", materialCount);
 
 	char s[512];
 	for(int i = 0; i < modelCount; i++)
@@ -121,7 +123,7 @@ public void OnMapStart()
 
 	for(int i = 0; i < materialCount; i++)
 	{
-		s = ModelFiles[i];
+		s = MaterialFiles[i];
 		if (FileExists(s, true))
 			AddFileToDownloadsTable(s);
 	}
@@ -336,7 +338,7 @@ void SetupCptAmerica(int client)
 */
 void SetupThanos(int client)
 {
-	SetPlayerModel(client, "models/infinity_war/thanos/inf_thanos.mdl");
+	SetPlayerModel(client, "models/kryptonite/inf_thanos/inf_thanos.mdl");
 }
 
 int GetActiveWeapon(int client)
@@ -363,7 +365,7 @@ void SetPlayerModel(int client, const char[] modelPath)
 {
 	SetVariantString(modelPath);
 	AcceptEntityInput(client, "SetCustomModel");
-	SetEntProp(client, Prop_Send, "m_bUseClassAnimations", 1);
+	SetEntProp(client, Prop_Send, "m_bUseClassAnimations", !(g_iItemFlags[iItem] & FLAG_NO_ANIM));
 }
 
 void PluginState(ConVar convar, const char[] oldValue, const char[] newValue)
