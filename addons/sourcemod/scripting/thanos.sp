@@ -51,15 +51,15 @@ char ModelFiles[][512] = {
 };
 
 char MaterialFiles[][512] = {
-	"materials/krypto/inf_thanos/pattern01.vtf",
-	"materials/krypto/inf_thanos/sv_thanos01_s02_1.vmt",
-	"materials/krypto/inf_thanos/sv_thanos01_s02_1.vtf",
-	"materials/krypto/inf_thanos/sv_thanos01_s02_1_sp.vtf",
-	"materials/krypto/inf_thanos/sv_thanos01_s02_1n.vtf",
-	"materials/krypto/inf_thanos/sv_thanos01_s02_2.vmt",
-	"materials/krypto/inf_thanos/sv_thanos01_s02_2.vtf",
-	"materials/krypto/inf_thanos/sv_thanos01_s02_2_n.vtf",
-	"materials/krypto/inf_thanos/sv_thanos01_s02_2_sp.vtf"
+	"materials/models/krypto/inf_thanos/pattern01.vtf",
+	"materials/models/krypto/inf_thanos/sv_thanos01_s02_1.vmt",
+	"materials/models/krypto/inf_thanos/sv_thanos01_s02_1.vtf",
+	"materials/models/krypto/inf_thanos/sv_thanos01_s02_1_sp.vtf",
+	"materials/models/krypto/inf_thanos/sv_thanos01_s02_1n.vtf",
+	"materials/models/krypto/inf_thanos/sv_thanos01_s02_2.vmt",
+	"materials/models/krypto/inf_thanos/sv_thanos01_s02_2.vtf",
+	"materials/models/krypto/inf_thanos/sv_thanos01_s02_2_n.vtf",
+	"materials/models/krypto/inf_thanos/sv_thanos01_s02_2_sp.vtf"
 };
 
 public Plugin myinfo =
@@ -128,7 +128,7 @@ public void OnMapStart()
 			AddFileToDownloadsTable(s);
 	}
 
-	PrecacheModel("models/infinity_war/thanos/inf_thanos.mdl");
+	PrecacheModel("models/kryptonite/inf_thanos/inf_thanos.mdl");
 }
 
 public void OnPluginEnd()
@@ -364,8 +364,8 @@ int GetRandomClient()
 void SetPlayerModel(int client, const char[] modelPath)
 {
 	SetVariantString(modelPath);
-	AcceptEntityInput(client, "SetCustomModel");
-	SetEntProp(client, Prop_Send, "m_bUseClassAnimations", !(g_iItemFlags[iItem] & FLAG_NO_ANIM));
+ 	AcceptEntityInput(client, "SetCustomModel");
+	SetEntProp(client, Prop_Send, "m_bUseClassAnimations", 1);
 }
 
 void PluginState(ConVar convar, const char[] oldValue, const char[] newValue)
