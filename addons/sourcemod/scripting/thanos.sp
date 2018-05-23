@@ -41,7 +41,7 @@ bool g_bWaitingForPlayers = false;
 int g_iCountDownStart = 20;
 int g_iCountDown_def = 20;
 
-char[6][512] ModelFiles = {
+char ModelFiles[6][512] = {
 	"models/infinity_war/thanos/inf_thanos.mdl",
 	"models/infinity_war/thanos/inf_thanos.dx80.vtx",
 	"models/infinity_war/thanos/inf_thanos.dx90.vtx",
@@ -50,7 +50,7 @@ char[6][512] ModelFiles = {
 	"models/infinity_war/thanos/inf_thanos.vvd"
 };
 
-char[6][512] MaterialFiles = {
+char MaterialFiles[9][512] = {
 	"materials/models/krypto/pattern01.vtf",
 	"materials/models/krypto/sv_thanos01_s02_1.vmt",
 	"materials/models/krypto/sv_thanos01_s02_1.vtf",
@@ -60,7 +60,7 @@ char[6][512] MaterialFiles = {
 	"materials/models/krypto/sv_thanos01_s02_2.vtf",
 	"materials/models/krypto/sv_thanos01_s02_2_n.vtf",
 	"materials/models/krypto/sv_thanos01_s02_2_sp.vtf"
-}
+};
 
 public Plugin myinfo =
 {
@@ -111,21 +111,22 @@ public void OnMapStart()
 	int modelCount = sizeof(ModelFiles[]);
 	int materialCount = sizeof(MaterialFiles[]);
 
+	char s[512];
 	for(int i = 0; i < modelCount; i++)
 	{
-		char s[512] = ModelFiles[i];
+		s = ModelFiles[i];
 		if (FileExists(s, true))
 			AddFileToDownloadsTable(s);
-
-		PrecacheModel("models/infinity_war/thanos/inf_thanos.mdl");
 	}
 
 	for(int i = 0; i < materialCount; i++)
 	{
-		char s[512] = ModelFiles[i];
+		s = ModelFiles[i];
 		if (FileExists(s, true))
 			AddFileToDownloadsTable(s);
 	}
+
+	PrecacheModel("models/infinity_war/thanos/inf_thanos.mdl");
 }
 
 public void OnPluginEnd()
